@@ -78,22 +78,33 @@ export const insertNewItem = async(req, res) => {
         // try to add newUser into MongoDB
         try {
             let dateNow = Date.now();           // get the date time now
+            let itemNumberRefFromDB = '';
             const newUser = {
                 itemNumber: req.body.itemNumber,
                 description: req.body.description,
                 lastUpdatedDate: dateNow,
                 quantity: req.body.quantity, 
             };
-            await new Inventory(newUser).save().then( (item) => {
+            await new Inventory(newUser).save().then( () => {
                 console.log("save data to Inventory Schema of MongoDB")
             });
 
+
+            await Inventory.findOne({
+                itemNumber: req.body.itemNumber,  // use findOne to return only 1 object with ID
+                lastUpdatedDate: dateNow
+            })
+            .then( (item) => {
+                    itemNumberRefFromDB = item._id
+                }
+            )
+            
             const newTransaction = {
-                itemNumber: req.body.itemNumber,
+                itemNumberRef: itemNumberRefFromDB,
                 transactionDate: dateNow,
                 updateQuantity: req.body.quantity, 
             };
-            await new Transaction(newTransaction).save().then( (item) => {
+            new Transaction(newTransaction).save().then( (item) => {
                 console.log("save data to Transaction Schema of MongoDB")
                 res.redirect("inventories");    // redirect to inventories page
             });
@@ -133,13 +144,13 @@ export const showIncreasePage = (req, res) => {
 export const updateByIncrease = async(req, res) => {
 
     let dateNow = Date.now();                   // get the current date time
-    let itemNumberFromDB = '';
+    let itemNumberRefFromDB = '';
 
     await Inventory.findOne({
         _id: req.params.id,                     // use findOne to return only 1 object with ID
     })
     .then( (item) => {
-        itemNumberFromDB = item.itemNumber;     // get the item number for inserting into Transaction Schema
+        itemNumberRefFromDB = item._id;     // get the item number for inserting into Transaction Schema
 
         item.quantity = parseInt(item.quantity, 10) + parseInt(req.body.quantityIncrease, 10);      // update quantity value
         item.lastUpdatedDate = dateNow;
@@ -149,7 +160,7 @@ export const updateByIncrease = async(req, res) => {
     });
     
     const newTransaction = {
-        itemNumber: itemNumberFromDB,
+        itemNumberRef: itemNumberRefFromDB,
         transactionDate: dateNow,
         updateQuantity: req.body.quantityIncrease, 
     };
@@ -177,7 +188,7 @@ export const showDecreasePage = (req, res) => {
 export const updateByDecrease = async(req, res) => {
 
     let dateNow = Date.now();                   // get the current date time
-    let itemNumberFromDB = '';
+    let itemNumberRefFromDB = '';
 
     await Inventory.findOne({
         _id: req.params.id,                     // use findOne to return only 1 object with ID
@@ -186,7 +197,7 @@ export const updateByDecrease = async(req, res) => {
         if (parseInt(req.body.quantityDecrease, 10) > item.quantity) {
             res.render("outOfStock");           // if the number of decreasing is larger than original quantity of the item, the tell out of stock
         } else {
-            itemNumberFromDB = item.itemNumber;
+            itemNumberRefFromDB = item._id;
 
             item.quantity = parseInt(item.quantity, 10) - parseInt(req.body.quantityDecrease, 10);      // update quantity value
             item.lastUpdatedDate = dateNow;
@@ -196,7 +207,7 @@ export const updateByDecrease = async(req, res) => {
 
             
             const newTransaction = {
-                itemNumber: itemNumberFromDB,
+                itemNumberRef: itemNumberRefFromDB,
                 transactionDate: dateNow,
                 updateQuantity: parseInt(req.body.quantityDecrease, 10) * -1,     // make the number to be negative 
             };
@@ -212,19 +223,19 @@ export const updateByDecrease = async(req, res) => {
 // ===================== Delete the Item =======================
 export const deleteItem = async(req, res) => {
 
-    let itemNumberFromDB = '';
+    let itemNumberRefFromDB = '';
     let delQuantity = 0;
 
     await Inventory.findOne({
         _id: req.params.id,                     // use findOne to return only 1 object with ID
     })
     .then( (item) => {
-        itemNumberFromDB = item.itemNumber;
+        itemNumberRefFromDB = item._id;
         delQuantity -= parseInt(item.quantity, 10);     // make the number to be negative
     });
     
     const newTransaction = {
-        itemNumber: itemNumberFromDB,
+        itemNumberRef: itemNumberRefFromDB,
         transactionDate: Date.now(),            // update with the current date time
         updateQuantity: delQuantity, 
     };

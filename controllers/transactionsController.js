@@ -10,22 +10,22 @@ export const showRecords = (req, res) => {
     Transaction.aggregate([                     // join two schema to get detail of each item (e.g. description of item)
         { $lookup:
             {
-                from: "inventories",
-                localField: "itemNumber",
-                foreignField: "itemNumber",
+                from: "inventories",            // link Transaction collection and Inventory collection 
+                localField: "itemNumberRef",
+                foreignField: "_id",            // link collections base on _id of MongoDB 
                 as: "detail",
             }
         },
-        { $sort :                               // show all records: item number in ascending order & transaction date in ascendeing order
-            { 
-                "itemNumber" : 1 , 
-                "transactionDate": 1
+        { $unwind: {
+                path: "$detail",
+                preserveNullAndEmptyArrays: true
             }
         },
         { $project:                             // name the attributes
             {
-                itemNumber : "$itemNumber",
-                detail : "$detail",
+                itemNumberRef : "$itemNumberRef",
+                itemNumber : "$detail.itemNumber",
+                description: "$detail.description",
                 transactionDate: {
                     $dateToString : {           // format the date format 
                         format : "%Y-%m-%d %H:%M:%S", 
@@ -34,6 +34,13 @@ export const showRecords = (req, res) => {
                     }
                 },
                 updateQuantity : "$updateQuantity",
+            }
+        },
+        { $sort :                               // show all records: item number in ascending order & transaction date in ascendeing order
+            { 
+                "itemNumber" : 1 ,
+                "itemNumberRef" : 1 ,           // there is no itemNumber for the deleted items
+                "transactionDate": 1
             }
         },
     ])
@@ -52,10 +59,15 @@ export const searchRecords = (req, res) => {
     Transaction.aggregate([                     // join two schema to get detail of each item (e.g. description of item)
         { $lookup:
             {
-                from: "inventories",
-                localField: "itemNumber",
-                foreignField: "itemNumber",
+                from: "inventories",            // link Transaction collection and Inventory collection 
+                localField: "itemNumberRef",
+                foreignField: "_id",            // link collections base on _id of MongoDB 
                 as: "detail",
+            }
+        },
+        { $unwind: {
+                path: "$detail",
+                preserveNullAndEmptyArrays: true
             }
         },
         { $match :
@@ -69,13 +81,15 @@ export const searchRecords = (req, res) => {
         { $sort :                               // show all records: item number in ascending order & transaction date in ascendeing order
             {
                 "itemNumber" : 1 , 
+                "itemNumberRef" : 1 ,           // there is no itemNumber for the deleted items
                 "transactionDate": 1
             } 
         },
         { $project:                             // name the attributes
             {
-                itemNumber : "$itemNumber",
-                detail : "$detail",
+                itemNumberRef : "$itemNumberRef",
+                itemNumber : "$detail.itemNumber",
+                description: "$detail.description",
                 transactionDate: {
                     $dateToString : {           // format the date format 
                         format : "%Y-%m-%d %H:%M:%S", 

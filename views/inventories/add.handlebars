@@ -12,17 +12,17 @@
         <div class="form-group">
             <label for="itemNumber">Item Number (3 digit number)</label>
             <!-- required to enforce input -->
-            <input type="text" name="itemNumber" class="form-control" minlength="3" maxlength="3" autocomplete="off"  />
+            <input type="text" name="itemNumber" class="form-control" minlength="3" maxlength="3" autocomplete="off" value="{{itemNumber}}"  />
         </div>
         <div class="form-group">
             <label for="description">Description</label>
             <!-- required to enforce input -->
-            <input type="text" name="description" class="form-control" autocomplete="off"  />
+            <input type="text" name="description" class="form-control" autocomplete="off" value="{{description}}" />
         </div>
         <div class="form-group">
             <label for="quantity">Quantity</label>
             <!-- required to enforce input -->
-            <input type="number"  name="quantity" class="form-control" min="0" autocomplete="off" ></input>
+            <input type="number"  name="quantity" class="form-control" min="0" autocomplete="off" value="{{quantity}}"></input>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

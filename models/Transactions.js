@@ -5,8 +5,8 @@ import mongoose from "mongoose";
 const {Schema} = mongoose;
 
 const TransactionSchema = new Schema( { 
-    itemNumber: {
-        type : String,
+    itemNumberRef: {
+        type : mongoose.Types.ObjectId,
         required : true,
     },
     transactionDate : {

@@ -48,25 +48,24 @@ tr:nth-child(even) {
             <th class="transaction-title">Item Number</th>
             <th class="transaction-title">Description</th>
             <th class="transaction-title">Transaction Date</th>
-            <th class="transaction-title">Quantity</th>
+            <th class="transaction-title">Change on Quantity</th>
         </tr>
         
         {{#each records}}
-
-        {{#if (isSame @root.lastItemNumber itemNumber) }}   <!-- check whether the current itemNumber is the same as the previous itemNumber -->
+        {{#if (isSame @root.lastItemNumberRef itemNumberRef) }}   <!-- check whether the current itemNumber is the same as the previous itemNumber -->
         <tr>
         {{else}}
         <tr class="transaction-newrow">                     <!-- if the next records is not the same item, then use a border-line with different CSS to indicate -->
         {{/if}}
             
-            <td class="transaction-record">{{itemNumber}}</td>
-            <td class="transaction-record">{{#each detail}}{{description}}{{else}}<i>Deleted Item</i>{{/each}}</td>
+            <td class="transaction-record">{{#if itemNumber}}{{itemNumber}}{{else}}<i>Deleted</i>{{/if}} </td>
+            <td class="transaction-record">{{#if description}}{{description}}{{else}}<i>Deleted Item</i>{{/if}}</td>
             <td class="transaction-record">{{transactionDate}}</td>
             <td class="transaction-record">{{updateQuantity}}</td>
 
         </tr>
 
-            {{assign "lastItemNumber" itemNumber}}              <!-- store the previous itemNumber -->
+            {{assign "lastItemNumberRef" itemNumberRef}}              <!-- store the previous itemNumber -->
         {{/each}}
         
     </table>

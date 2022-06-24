@@ -33,7 +33,7 @@ handlebars.registerHelper('assign', function (varName, varValue, options) {
 
 // make a function to check whether the variables in handlebars are the same
 handlebars.registerHelper('isSame', function (var1, var2) {
-    return var1 === var2;
+    return String(var1) === String(var2);
 });
 
 
