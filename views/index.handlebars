@@ -1,0 +1,25 @@
+<style>
+    .jumbotron {
+        padding: 2rem 1rem;
+        margin-bottom: 2rem;
+        background-color: #e9ecef;
+        border-radius: 0.3rem;
+    }
+</style>
+<div class="jumbotron text-center">
+    <h1 class="display-3">{{title}}</h1>
+    <p class="lead">Simply app</p>
+    <p>Manage all inventories here</p>
+    <a class="btn btn-dark btn-lg" href="/inventories/add" role="button">Add New Item</a>
+    <br>
+    <br>
+    <br>
+    <br>
+    <form action="/inventories/search" method="post">
+        <div class="form-group">
+            <label for="itemNumber">Item Number (3 digit number)</label>
+            <input type="text" name="itemNumber" class="form-control" minlength="3" maxlength="3" pattern="[0-9]{3}" autocomplete="off" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>

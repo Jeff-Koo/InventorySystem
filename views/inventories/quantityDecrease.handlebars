@@ -1,0 +1,21 @@
+<!-- passing errors to page -->
+<!--  -->
+{{#each errors}}
+    <!-- if error then put the text,  the text propty from error-->
+    <div class="alert alert-danger">{{text}}</div>
+{{else}}
+
+{{/each}}
+<!-- changing the method adding with "Put", hide the input for PUT -->
+<div class="card card-body">
+    <h3>Decrease Inventory</h3>
+    <form action="/inventories/quantityDecrease/{{item._id}}?_method=PUT" method="POST">
+        <input type="hidden" name="_method" value="PUT" />
+        <div class="form-group">
+            <label for="quantityDecrease">Quantity Decrease</label>
+            <input type="number"  name="quantityDecrease" class="form-control" min="0" required></input>
+            <!-- variable as text content -->
+        </div>
+        <button type="submit" class="btn btn-primary">submit</button>
+    </form>
+</div>

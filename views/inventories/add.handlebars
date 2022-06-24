@@ -1,0 +1,29 @@
+<!-- passing errors to page -->
+<!-- loop through the errors -->
+{{#each errors}}
+    <!-- if error then put the text,  the text propty from error-->
+    <div class="alert alert-danger">{{text}}</div>
+{{else}}
+{{/each}}
+
+<div class="card card-body">
+    <h3>Stock Inventory System</h3>
+    <form action="/inventories" method="post">
+        <div class="form-group">
+            <label for="itemNumber">Item Number (3 digit number)</label>
+            <!-- required to enforce input -->
+            <input type="text" name="itemNumber" class="form-control" minlength="3" maxlength="3" autocomplete="off"  />
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <!-- required to enforce input -->
+            <input type="text" name="description" class="form-control" autocomplete="off"  />
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <!-- required to enforce input -->
+            <input type="number"  name="quantity" class="form-control" min="0" autocomplete="off" ></input>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

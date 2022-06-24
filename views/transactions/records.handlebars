@@ -1,0 +1,101 @@
+<style>
+.transaction-title{
+    text-align: center;
+    padding-right: 50px;
+}
+.transaction-record{
+    text-align: center;
+    padding-right: 50px;
+}
+.transaction-table {
+    width: 80%;
+}
+.transaction-newrow {
+    border-top: 4px solid rgb(64, 64, 153);
+}
+
+.validity {
+    color: red;
+}
+
+tr:nth-child(even) {
+    background-color: rgb(208, 208, 208);
+}
+
+</style>
+
+{{!-- search function on transaction records --}}
+<div class="card card-body mb-2">
+    <form action="/transactions/records/search" method="post">
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <input type="date" class="form-control" name="startDate" value="{{startDate}}" min="2022-01-01" max="2022-12-31" id="startDate" onchange="checkDate()" required>
+                <label for="endDate">End Date</label>
+                <input type="date" class="form-control" name="endDate"   value="{{endDate}}"   min="2022-01-01" max="2022-12-31" id="endDate"   onchange="checkDate()" required/>
+                <span id="validity" class="validity"></span>
+            </div>
+            <button type="submit" class="btn btn-primary" id="searchButton" >Search</button>
+    </form>
+</div>
+
+
+{{!-- receive data from MongoDB and show records with a table --}}
+{{#if records}}
+
+<div class="card card-body mb-2">
+    <table class="transaction-table" id="toggled-element">
+        <tr style="border-bottom: 4px solid black;">
+            <th class="transaction-title">Item Number</th>
+            <th class="transaction-title">Description</th>
+            <th class="transaction-title">Transaction Date</th>
+            <th class="transaction-title">Quantity</th>
+        </tr>
+        
+        {{#each records}}
+
+        {{#if (isSame @root.lastItemNumber itemNumber) }}   <!-- check whether the current itemNumber is the same as the previous itemNumber -->
+        <tr>
+        {{else}}
+        <tr class="transaction-newrow">                     <!-- if the next records is not the same item, then use a border-line with different CSS to indicate -->
+        {{/if}}
+            
+            <td class="transaction-record">{{itemNumber}}</td>
+            <td class="transaction-record">{{#each detail}}{{description}}{{else}}<i>Deleted Item</i>{{/each}}</td>
+            <td class="transaction-record">{{transactionDate}}</td>
+            <td class="transaction-record">{{updateQuantity}}</td>
+
+        </tr>
+
+            {{assign "lastItemNumber" itemNumber}}              <!-- store the previous itemNumber -->
+        {{/each}}
+        
+    </table>
+</div>
+
+{{else}}
+    {{!-- if no records, then show this message --}}
+    <h2>No Transaction Records Listed</h2>
+
+{{/if}}
+
+<script>
+
+// check date order in front-end basic JavaScript
+function checkDate() {
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
+
+    if (startDate && endDate) {
+        if ( new Date(startDate) > new Date(endDate) ) {
+            document.getElementById("validity").textContent = "Start date should be smaller than End date";
+            document.getElementById("searchButton").disabled = true;
+        } else {
+            document.getElementById("validity").textContent = "";
+            document.getElementById("searchButton").disabled = false;
+        }
+    }
+}
+
+
+</script>
+
