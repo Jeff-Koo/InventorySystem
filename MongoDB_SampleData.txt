@@ -3,117 +3,21 @@
 use inventory-dev
 
 
-
 // insert sample data
 
 db.inventories.insertMany([
-{
-  "itemNumber": "001",
-  "description": "罐頭食品",
-  "lastUpdatedDate": ISODate("2022-05-20T03:06:28.513Z"),
-  "quantity": 50
-},
-{
-  "itemNumber": "002",
-  "description": "支裝水 500mL",
-  "lastUpdatedDate": ISODate("2022-05-21T03:06:44.680Z"),
-  "quantity": 70
-},
-{
-  "itemNumber": "003",
-  "description": "曲奇餅",
-  "lastUpdatedDate": ISODate("2022-05-28T03:07:02.008Z"),
-  "quantity": 50
-},
-{
-  "itemNumber": "004",
-  "description": "原子筆",
-  "lastUpdatedDate": ISODate("2022-06-01T03:07:18.385Z"),
-  "quantity": 200
-},
-{
-  "itemNumber": "005",
-  "description": "薯片 500g",
-  "lastUpdatedDate": ISODate("2022-06-02T03:07:34.843Z"),
-  "quantity": 112
-}
+
+
 ]);
 
 
+
 db.transactions.insertMany([
-{
-  "itemNumber": "001",
-  "transactionDate": ISODate("2022-05-19T03:02:42.879Z"),
-  "updateQuantity": 20
-},
-{
-  "itemNumber": "002",
-  "transactionDate": ISODate("2022-05-19T03:03:12.878Z"),
-  "updateQuantity": 40
-},
-{
-  "itemNumber": "003",
-  "transactionDate": ISODate("2022-05-27T03:03:47.721Z"),
-  "updateQuantity": 35
-},
-{
-  "itemNumber": "004",
-  "transactionDate": ISODate("2022-06-02T03:05:13.084Z"),
-  "updateQuantity": 150
-},
-{
-  "itemNumber": "005",
-  "transactionDate": ISODate("2022-06-01T03:06:06.792Z"),
-  "updateQuantity": 100
-},
-{
-  "itemNumber": "001",
-  "transactionDate": ISODate("2022-05-20T03:06:28.513Z"),
-  "updateQuantity": 30
-},
-{
-  "itemNumber": "002",
-  "transactionDate": ISODate("2022-05-21T03:06:44.680Z"),
-  "updateQuantity": 30
-},
-{
-  "itemNumber": "003",
-  "transactionDate": ISODate("2022-05-28T03:06:54.343Z"),
-  "updateQuantity": -15
-},
-{
-  "itemNumber": "003",
-  "transactionDate": ISODate("2022-05-29T03:07:02.008Z"),
-  "updateQuantity": 30
-},
-{
-  "itemNumber": "004",
-  "transactionDate": ISODate("2022-05-31T03:07:11.371Z"),
-  "updateQuantity": 100
-},
-{
-  "itemNumber": "004",
-  "transactionDate": ISODate("2022-06-01T03:07:18.385Z"),
-  "updateQuantity": -50
-},
-{
-  "itemNumber": "005",
-  "transactionDate": ISODate("2022-06-02T03:07:27.441Z"),
-  "updateQuantity": -88
-},
-{
-  "itemNumber": "005",
-  "transactionDate": ISODate("2022-06-02T03:07:34.843Z"),
-  "updateQuantity": 100
-},
-{
-  "itemNumber": "007",
-  "transactionDate": ISODate("2022-05-23T15:59:59.063Z"),
-  "updateQuantity": 10
-},
-{
-  "itemNumber": "007",
-  "transactionDate": ISODate("2022-05-27T03:08:45.147Z"),
-  "updateQuantity": -10
-}
+
+]);
+
+
+
+db.staffs.insertMany([
+
 ]);

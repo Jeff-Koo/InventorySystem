@@ -3,7 +3,7 @@ import express from "express";
 import { engine } from "express-handlebars";
 
 // load application from express
-import { application } from "express";
+// import { application } from "express";
 
 // load mongoose
 import mongoose from "mongoose";
@@ -25,6 +25,17 @@ import  inventoriesRoute  from './routes/inventoriesRoute.js';
 
 // import transactions as a route 
 import  transactionsRoute  from './routes/transactionsRoute.js';
+
+// import transactions as a route 
+import  staffsRoute  from './routes/staffsRoute.js';
+
+// import passport and config for making session management 
+import session  from 'express-session';
+import passport from "passport";
+import passportConfig from './config/passportConfig.js';
+passportConfig(passport);
+
+import flash  from 'connect-flash';
 
 // make a function to store the variables in handlebars
 handlebars.registerHelper('assign', function (varName, varValue, options) {
@@ -64,13 +75,47 @@ app.use(bodyParser.json());
 // add methodOverride middleware
 app.use(methodOverride("_method"));
 
+// session initialization and make the expire time for cookies 
+app.use(
+    session({
+        secret: "sdjfkl",
+        resave: true,
+        saveUninitialized: true,
+        cookie: {
+            maxAge: 20 * 60 * 1000      // 20 minutes
+        }
+    })
+);
+
+// there is serialize session within the passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+// set gloabl variable
+// whatever msg is going to post, apps to the "locals" template
+app.use(function(req, res, next) {
+    // res.locals.success_msg = req.flash("success_msg");
+    // res.locals.error_msg = req.flash("error_msg");
+    // // for passport error handling
+    // res.locals.error = req.flash("error");
+    // // create global variable user to passing through all the modules
+    // // if there is user then true, else null as no user
+    res.locals.user = req.user || null;
+    // console.log("==========="+res.locals.user);
+    next();
+})
+
+app.use(flash());
+
+
 // create a root route (localhost:5000)
 app.get("/", (req, res) => {
     const welcome ="Welcome";
     res.render("index", {title: welcome});
 } );
 
-// create a route for about (localhost:5000/about)
+// create a route for about
 app.get("/about", (req, res) => {
     res.render("about");
 } );
@@ -79,15 +124,16 @@ app.get("/about", (req, res) => {
 app.use('/inventories', inventoriesRoute);
 // add transactions as a route 
 app.use('/transactions', transactionsRoute);
-
+// add staffs as a route 
+app.use('/staffs', staffsRoute);
 
 // ===================== Handle 404 / 500 =======================
 
 // simulate handling 500 - Internal Server Error
-app.use( '/abc?d' , (req, res, next) => {   // when the route matches '/abcd' and '/abd'
-    res.status(500);                        // set status to 500
-    res.render('500');                      // render 500 page
-});
+// app.use( '/abc?d' , (req, res, next) => {   // when the route matches '/abcd' and '/abd'
+//     res.status(500);                        // set status to 500
+//     res.render('500');                      // render 500 page
+// });
 
 // handle 404 - Not Found
 app.use('', (req, res, next) => {           // match every path which does not handled by the route above, 404 is the last route

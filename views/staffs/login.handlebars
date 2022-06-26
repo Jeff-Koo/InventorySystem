@@ -1,0 +1,23 @@
+{{#if text}}
+    <!-- if error then put the text,  the text propty from error-->
+    <div class="alert alert-danger">{{text}}</div>
+{{/if}}
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card card-body">
+            <h3 class="text-center">Account Login</h3>
+            <form action="/staffs/login" method="post">
+                <div class="form-group">
+                    <label for="loginName">Login Name</label>
+                    <input type="text" name="loginName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

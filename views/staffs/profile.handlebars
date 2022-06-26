@@ -1,0 +1,13 @@
+{{#if text}}
+    <!-- if error then put the text,  the text propty from error-->
+    <div class="alert alert-success">{{text}}</div>
+{{/if}}
+
+<div class="card card-body mb-2">
+    {{!-- photo?  --}}
+    <p><b>Staff Name: </b> {{staffName}}</p>
+    <p><b>Login Name: </b> {{loginName}}</p>
+
+    {{!-- edit password --}}
+    <a href="/staffs/edit" class="btn btn-dark btn-block">Edit</a>  
+</div>
