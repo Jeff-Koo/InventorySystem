@@ -6,10 +6,12 @@
         border-radius: 0.3rem;
     }
 </style>
+
 <div class="jumbotron text-center">
     <h1 class="display-3">{{title}}</h1>
     <p class="lead">Simply app</p>
     <p>Manage all inventories here</p>
+    {{#if user}}
     <a class="btn btn-dark btn-lg" href="/inventories/add" role="button">Add New Item</a>
     <br>
     <br>
@@ -22,4 +24,8 @@
         </div>
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
+    
+    {{else}}
+    <a class="btn btn-dark btn-lg" href="/staffs/login" role="button">Login</a>
+    {{/if}}
 </div>

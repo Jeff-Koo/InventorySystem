@@ -13,19 +13,32 @@ export const showRecords = (req, res) => {
                 from: "inventories",            // link Transaction collection and Inventory collection 
                 localField: "itemNumberRef",
                 foreignField: "_id",            // link collections base on _id of MongoDB 
-                as: "detail",
+                as: "itemInfo",
+            }
+        },
+        { $lookup:
+            {
+                from: "staffs",                 // link Transaction collection and Staff collection 
+                localField: "staffRef",
+                foreignField: "_id",            // link collections base on _id of MongoDB 
+                as: "staffInfo",
             }
         },
         { $unwind: {
-                path: "$detail",
+                path: "$itemInfo",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        { $unwind: {
+                path: "$staffInfo",
                 preserveNullAndEmptyArrays: true
             }
         },
         { $project:                             // name the attributes
             {
                 itemNumberRef : "$itemNumberRef",
-                itemNumber : "$detail.itemNumber",
-                description: "$detail.description",
+                itemNumber : "$itemInfo.itemNumber",
+                description: "$itemInfo.description",
                 transactionDate: {
                     $dateToString : {           // format the date format 
                         format : "%Y-%m-%d %H:%M:%S", 
@@ -34,6 +47,7 @@ export const showRecords = (req, res) => {
                     }
                 },
                 updateQuantity : "$updateQuantity",
+                staffName : "$staffInfo.staffName",
             }
         },
         { $sort :                               // show all records: item number in ascending order & transaction date in ascendeing order
@@ -62,11 +76,24 @@ export const searchRecords = (req, res) => {
                 from: "inventories",            // link Transaction collection and Inventory collection 
                 localField: "itemNumberRef",
                 foreignField: "_id",            // link collections base on _id of MongoDB 
-                as: "detail",
+                as: "itemInfo",
+            }
+        },
+        { $lookup:
+            {
+                from: "staffs",                 // link Transaction collection and Staff collection 
+                localField: "staffRef",
+                foreignField: "_id",            // link collections base on _id of MongoDB 
+                as: "staffInfo",
             }
         },
         { $unwind: {
-                path: "$detail",
+                path: "$itemInfo",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        { $unwind: {
+                path: "$staffInfo",
                 preserveNullAndEmptyArrays: true
             }
         },
@@ -88,8 +115,8 @@ export const searchRecords = (req, res) => {
         { $project:                             // name the attributes
             {
                 itemNumberRef : "$itemNumberRef",
-                itemNumber : "$detail.itemNumber",
-                description: "$detail.description",
+                itemNumber : "$itemInfo.itemNumber",
+                description: "$itemInfo.description",
                 transactionDate: {
                     $dateToString : {           // format the date format 
                         format : "%Y-%m-%d %H:%M:%S", 
@@ -98,6 +125,7 @@ export const searchRecords = (req, res) => {
                     }
                 },
                 updateQuantity : "$updateQuantity",
+                staffName : "$staffInfo.staffName",
             }
         }
         

@@ -2,22 +2,24 @@ import express from "express";
 
 // import functions from controller
 import {showAllItems, insertNewItem, searchOneItem, getAddPage, 
-    showIncreasePage, updateByIncrease, showDecreasePage, updateByDecrease, deleteItem} from "./../controllers/inventoriesController.js";
+    showIncreasePage, updateByIncrease, showDecreasePage, updateByDecrease, deleteItem} 
+    from "./../controllers/inventoriesController.js";
+
+import ensureAuthenticated from "../helpers/auth.js";
 
 const router = express.Router();
 
 
-router.route("/").get(showAllItems).post(insertNewItem);
+router.route("/").get(ensureAuthenticated, showAllItems).post(ensureAuthenticated, insertNewItem);
 
-router.post("/search", searchOneItem);
+router.post("/search", ensureAuthenticated, searchOneItem);
 
-router.get("/add", getAddPage);
+router.get("/add", ensureAuthenticated, getAddPage);
 
+router.route("/quantityIncrease/:id").get(ensureAuthenticated, showIncreasePage).put(ensureAuthenticated, updateByIncrease);
 
-router.route("/quantityIncrease/:id").get(showIncreasePage).put(updateByIncrease);
+router.route("/quantityDecrease/:id").get(ensureAuthenticated, showDecreasePage).put(ensureAuthenticated, updateByDecrease);
 
-router.route("/quantityDecrease/:id").get(showDecreasePage).put(updateByDecrease);
-
-router.delete("/:id", deleteItem);
+router.delete("/:id", ensureAuthenticated, deleteItem);
 
 export default router;

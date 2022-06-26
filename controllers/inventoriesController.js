@@ -74,18 +74,18 @@ export const insertNewItem = async(req, res) => {
     } else {
 
         // if data are good then come to here
-        // use the newUser to keep the data object
-        // try to add newUser into MongoDB
+        // use the newItem to keep the data object
+        // try to add newItem into MongoDB
         try {
             let dateNow = Date.now();           // get the date time now
             let itemNumberRefFromDB = '';
-            const newUser = {
+            const newItem = {
                 itemNumber: req.body.itemNumber,
                 description: req.body.description,
                 lastUpdatedDate: dateNow,
                 quantity: req.body.quantity, 
             };
-            await new Inventory(newUser).save().then( () => {
+            await new Inventory(newItem).save().then( () => {
                 console.log("save data to Inventory Schema of MongoDB")
             });
 
@@ -100,9 +100,10 @@ export const insertNewItem = async(req, res) => {
             )
             
             const newTransaction = {
-                itemNumberRef: itemNumberRefFromDB,
-                transactionDate: dateNow,
+                itemNumberRef: itemNumberRefFromDB, 
+                transactionDate: dateNow, 
                 updateQuantity: req.body.quantity, 
+                staffRef : res.locals.user._id, 
             };
             new Transaction(newTransaction).save().then( (item) => {
                 console.log("save data to Transaction Schema of MongoDB")
@@ -160,9 +161,10 @@ export const updateByIncrease = async(req, res) => {
     });
     
     const newTransaction = {
-        itemNumberRef: itemNumberRefFromDB,
-        transactionDate: dateNow,
+        itemNumberRef: itemNumberRefFromDB, 
+        transactionDate: dateNow, 
         updateQuantity: req.body.quantityIncrease, 
+        staffRef : res.locals.user._id, 
     };
     new Transaction(newTransaction).save().then( (item) => {
         console.log("save data to Transaction Schema MongoDB");     // save the transaction record to Transaction Schema
@@ -210,6 +212,7 @@ export const updateByDecrease = async(req, res) => {
                 itemNumberRef: itemNumberRefFromDB,
                 transactionDate: dateNow,
                 updateQuantity: parseInt(req.body.quantityDecrease, 10) * -1,     // make the number to be negative 
+                staffRef : res.locals.user._id, 
             };
             new Transaction(newTransaction).save().then( (item) => {
                 console.log("save data to Transaction Schema MongoDB");     // save the transaction record to Transaction Schema
@@ -238,6 +241,7 @@ export const deleteItem = async(req, res) => {
         itemNumberRef: itemNumberRefFromDB,
         transactionDate: Date.now(),            // update with the current date time
         updateQuantity: delQuantity, 
+        staffRef : res.locals.user._id, 
     };
     new Transaction(newTransaction).save().then( (item) => {
         console.log("save data to MongoDB")     // save the delete record to Transaction Schema

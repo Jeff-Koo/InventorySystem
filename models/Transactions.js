@@ -17,6 +17,10 @@ const TransactionSchema = new Schema( {
         type : Number,      // can be positive and negative
         required : true,
     },
+    staffRef: {
+        type : mongoose.Types.ObjectId,
+        required : true,
+    }
 });
 
 const Transaction = mongoose.model("transactions", TransactionSchema);
