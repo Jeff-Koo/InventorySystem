@@ -1,0 +1,16 @@
+{{#each staffs}}
+<div class="card card-body mb-2">
+    <p><b>Staff Name : </b> {{staffName}}</p>
+    <p><b>Login Name : </b> {{loginName}}</p>
+
+    <!-- adding a form for delete button -->
+    <form action="/staffs/{{_id}}?_method=DELETE" method="post">
+        <input type="hidden" name="_method" value="DELETE" />
+        <input type="submit" class="btn btn-danger btn-block" value="Delete" />
+    </form>
+</div>
+{{else}}
+No Staff 
+{{/each}}
+
+<a href="/staffs/register" class="nav-link">Add New Staff</a>

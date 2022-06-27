@@ -127,12 +127,18 @@ export const registerNewStaff = (req, res, next) => {
             loginName : req.body.loginName,
             password : req.body.password,
             password2 : req.body.password2,
-        })
+        });
     } else {
         Staff.findOne({loginName: req.body.loginName}).then( (staff) => {
             if (staff) {
                 req.flash("error_msg", "Login Name already regsitered ! ");
-                res.redirect("/staffs/register");
+                res.render("staffs/register", {
+                    errors : errors,
+                    // staffName : req.body.staffName,
+                    // loginName : req.body.loginName,
+                    // password : req.body.password,
+                    // password2 : req.body.password2,
+                })
             }
         });
         
@@ -149,7 +155,7 @@ export const registerNewStaff = (req, res, next) => {
                 newStaff.save()
                     .then( (user) => {
                         // req.flash("success_msg", "Regsiter Done ! ");
-                        res.redirect("/staffs/login");
+                        res.redirect("/staffs/manage");
                     })
                     .catch((err) => {
                         console.log(err);
@@ -165,4 +171,26 @@ export const getLogout = (req, res, next) => {
         if (err) throw err; 
     });
     res.redirect("/")
+};
+
+
+export const showAllStaff = (req, res, next) =>{
+    Staff.find({})
+    .lean()
+    // .sort({ itemNumber: "asc" })           // show all items according to the item number in ascending order
+    .then( (staffs) => {                      // staffs: array of document objects
+        console.log(staffs);
+        res.render("staffs/manage", {
+            staffs : staffs,
+        });
+    });
+};
+
+
+export const deleteStaff = (req, res, next) => {
+    Staff.deleteOne({_id: req.params.id })
+    .then( () => {
+        console.log('deleted successfully');
+        res.redirect("/staffs/manage");         // del item from Inventory Schema, and redirect to inventories page
+    });
 };

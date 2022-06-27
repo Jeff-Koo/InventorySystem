@@ -250,7 +250,7 @@ export const deleteItem = async(req, res) => {
     // after getting the information of the item, then delete
     Inventory.deleteOne({_id: req.params.id })
     .then( () => {
-        console.log('success');
+        // console.log('success');
         res.redirect("../inventories");         // del item from Inventory Schema, and redirect to inventories page
     });
 };
