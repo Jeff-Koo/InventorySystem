@@ -1,5 +1,12 @@
 {{#each staffs}}
 <div class="card card-body mb-2">
+    <p><b>Staff Avatar: </b> 
+    {{#if avatar}}
+    <img src="data:image/{{avatar.contentType}};base64,{{avatar.data}}" width="50" height="50">
+    {{else}}
+    <img src="Default_User_Icon.png" alt="" width="50" height="50">
+    {{/if}}
+    </p>
     <p><b>Staff Name : </b> {{staffName}}</p>
     <p><b>Login Name : </b> {{loginName}}</p>
 
@@ -10,7 +17,7 @@
     </form>
 </div>
 {{else}}
-No Staff 
+No Other Staff 
 {{/each}}
 
 <a href="/staffs/register" class="nav-link">Add New Staff</a>

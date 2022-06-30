@@ -24,7 +24,7 @@
                 </li>
             </ul>
 
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav  ml-auto">
 
                 {{#if user}}
 
@@ -38,11 +38,19 @@
                 {{!-- {{/if}} --}}
                 
                 <li class="nav-item dropdown">
-                    <a  href="#" id="navbarDowpdownMenuLink"
+                    <a  href="#" 
+                        id="navbarDowpdownMenuLink"
                         role="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
-                        class="nav-link dropdown-toggle">{{#each user}}{{staffName}}{{/each}}</a>
+                        class="nav-link dropdown-toggle">
+                        {{#if user._doc.avatar.data}}
+                        <img src="data:image/{{user._doc.avatar.contentType}};base64,{{user._doc.avatar.data}}" width="50" height="50">
+                        {{else}}
+                        <img src="/Default_User_Icon.png" alt="" width="50" height="50">
+                        {{/if}}
+                        {{#if user._doc.staffName}}{{user._doc.staffName}}{{/if}}
+                        </a>
                     <div class="dropdown-menu">
                         <a href="/staffs/profile" class="dropdown-item">Show Staff Profile</a>
                         <a href="/staffs/logout" class="dropdown-item">Log Out</a>

@@ -66,6 +66,9 @@ app.set("view engine", "handlebars");
 app.set("views", "./views");
 app.use(morgan("tiny"));
 
+// make the image folder to be static, then the image can load to HTML
+app.use(express.static("views/public"));
+
 // put body-parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 

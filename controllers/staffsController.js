@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs";
 import passport from "passport";
+import * as fs from "fs";
+import * as path from "path";
 import Staff from "./../models/Staffs.js";
 
 export const getLogin = (req, res, next) => {
@@ -19,6 +21,7 @@ export const getProfile = (req, res, next) => {
     .lean()
     .then( (staff) => {
         res.render("staffs/profile", {
+            avatar : staff.avatar,
             staffName : staff.staffName,
             loginName : staff.loginName,
         });
@@ -45,6 +48,17 @@ export const updateProfile = (req, res, next) => {
                 // correct password, then do update 
                 staff.staffName = req.body.staffName;
 
+                var avatarData;
+                var avatarContentType;
+
+                if (req.file) {
+                    avatarData = fs.readFileSync(req.file.path).toString("base64");
+                    avatarContentType = req.file.mimetype;
+
+                    staff.avatar.data = avatarData;
+                    staff.avatar.contentType = avatarContentType;
+                }
+
                 // check input : 2 input new passwords are not empty  
                 if ( req.body.newPassword1 && req.body.newPassword2) {
                     // check two input password are the same
@@ -60,6 +74,7 @@ export const updateProfile = (req, res, next) => {
                                 staff.save().then( ()=> {
                                     res.render("staffs/profile", {
                                         text: "Updated Successfully ! ",
+                                        avatar : staff.avatar,
                                         staffName : staff.staffName,
                                         loginName : staff.loginName,
                                     });
@@ -81,6 +96,7 @@ export const updateProfile = (req, res, next) => {
                     staff.save().then( ()=> {
                         res.render("staffs/profile", {
                             text: "Updated Successfully ! ",
+                            avatar : staff.avatar,
                             staffName : staff.staffName,
                             loginName : staff.loginName,
                         });
@@ -175,7 +191,7 @@ export const getLogout = (req, res, next) => {
 
 
 export const showAllStaff = (req, res, next) =>{
-    Staff.find({})
+    Staff.find({ _id : {$ne : res.locals.user._id} })
     .lean()
     // .sort({ itemNumber: "asc" })           // show all items according to the item number in ascending order
     .then( (staffs) => {                      // staffs: array of document objects

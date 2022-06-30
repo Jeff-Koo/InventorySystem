@@ -14,7 +14,7 @@ const TransactionSchema = new Schema( {
         default : Date.now,
     },
     updateQuantity : {
-        type : Number,      // can be positive and negative
+        type : String,      // can be positive and negative
         required : true,
     },
     staffRef: {

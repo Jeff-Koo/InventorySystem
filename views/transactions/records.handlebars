@@ -8,7 +8,8 @@
     padding-right: 50px;
 }
 .transaction-table {
-    width: 80%;
+    align-self: center;
+    width: 95%;
 }
 .transaction-newrow {
     border-top: 4px solid rgb(64, 64, 153);
@@ -49,6 +50,7 @@ tr:nth-child(even) {
             <th class="transaction-title">Description</th>
             <th class="transaction-title">Transaction Date</th>
             <th class="transaction-title">Change on Quantity</th>
+            <th class="transaction-title">Staff Responsible</th>
         </tr>
         
         {{#each records}}
@@ -62,7 +64,7 @@ tr:nth-child(even) {
             <td class="transaction-record">{{#if description}}{{description}}{{else}}<i>Deleted Item</i>{{/if}}</td>
             <td class="transaction-record">{{transactionDate}}</td>
             <td class="transaction-record">{{updateQuantity}}</td>
-            <td class="transaction-record">{{staffName}}</td>
+            <td class="transaction-record">{{#if staffName}}{{staffName}}{{else}}<i>Staff Left</i>{{/if}}</td>
 
         </tr>
 

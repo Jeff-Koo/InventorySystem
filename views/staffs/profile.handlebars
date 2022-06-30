@@ -4,10 +4,14 @@
 {{/if}}
 
 <div class="card card-body mb-2">
-    {{!-- photo?  --}}
+    {{#if avatar.data}}
+    <p><b>Staff Image: </b> <img src="data:image/{{avatar.contentType}};base64,{{avatar.data}}" width="50" height="50"></p>
+    {{else}}
+    <p><img src="/Default_User_Icon.png" alt="" width="50" height="50"></p>
+    {{/if}}
     <p><b>Staff Name: </b> {{staffName}}</p>
     <p><b>Login Name: </b> {{loginName}}</p>
 
-    {{!-- edit password --}}
+    {{!-- edit profile: change Avatar, change Staff Name, chang Password --}}
     <a href="/staffs/edit" class="btn btn-dark btn-block">Edit</a>  
 </div>

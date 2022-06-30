@@ -17,8 +17,17 @@ const StaffSchema = new Schema( {
         type : String,
         required : true,
     },
+    avatar: {
+        data: {
+            type : Buffer,
+        }, 
+        contentType: {
+            type : String,
+        }
+    }
 });
 
 const Staff = mongoose.model("staffs", StaffSchema);
 
 export default Staff;
+

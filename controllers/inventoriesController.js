@@ -102,7 +102,7 @@ export const insertNewItem = async(req, res) => {
             const newTransaction = {
                 itemNumberRef: itemNumberRefFromDB, 
                 transactionDate: dateNow, 
-                updateQuantity: req.body.quantity, 
+                updateQuantity: "+"+req.body.quantity, 
                 staffRef : res.locals.user._id, 
             };
             new Transaction(newTransaction).save().then( (item) => {
@@ -163,7 +163,7 @@ export const updateByIncrease = async(req, res) => {
     const newTransaction = {
         itemNumberRef: itemNumberRefFromDB, 
         transactionDate: dateNow, 
-        updateQuantity: req.body.quantityIncrease, 
+        updateQuantity: "+"+req.body.quantityIncrease, 
         staffRef : res.locals.user._id, 
     };
     new Transaction(newTransaction).save().then( (item) => {
@@ -211,7 +211,7 @@ export const updateByDecrease = async(req, res) => {
             const newTransaction = {
                 itemNumberRef: itemNumberRefFromDB,
                 transactionDate: dateNow,
-                updateQuantity: parseInt(req.body.quantityDecrease, 10) * -1,     // make the number to be negative 
+                updateQuantity: "-"+req.body.quantityDecrease,     // make the number to be negative 
                 staffRef : res.locals.user._id, 
             };
             new Transaction(newTransaction).save().then( (item) => {
@@ -240,7 +240,7 @@ export const deleteItem = async(req, res) => {
     const newTransaction = {
         itemNumberRef: itemNumberRefFromDB,
         transactionDate: Date.now(),            // update with the current date time
-        updateQuantity: delQuantity, 
+        updateQuantity: "-"+delQuantity, 
         staffRef : res.locals.user._id, 
     };
     new Transaction(newTransaction).save().then( (item) => {

@@ -9,7 +9,7 @@ export default function (passport) {
             // console.log(loginName, password);        // if it is working then should console the variable
             // Match staff based on loginName
             Staff.findOne({
-                email : loginName,
+                loginName : loginName,
             }).then( (staff) => {
                 if (!staff) {
                     // done function    error,        user,                                      {message}
