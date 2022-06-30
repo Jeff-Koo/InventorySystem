@@ -5,17 +5,21 @@ import mongoose from "mongoose";
 const {Schema} = mongoose;
 
 const StaffSchema = new Schema( { 
-    loginName: {
+    loginName : {
         type : String,
         required : true,
     },
-    password: {
+    password : {
         type : String,
         required : true,
     },
-    staffName: {
+    staffName : {
         type : String,
         required : true,
+    },
+    isAdmin : {
+        type : Boolean, 
+        default : false,
     },
     avatar: {
         data: {
@@ -24,7 +28,7 @@ const StaffSchema = new Schema( {
         contentType: {
             type : String,
         }
-    }
+    },
 });
 
 const Staff = mongoose.model("staffs", StaffSchema);

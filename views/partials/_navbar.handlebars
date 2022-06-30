@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
     <div class="container-fluid">
+        <img src="/SystemIcon.png" alt="SystemIcon" width="50" height="50" >
         <a class="navbar-brand" >Inventory Management System</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -28,14 +29,14 @@
 
                 {{#if user}}
 
-                {{!-- {{#if isAdmin}} --}}
+                {{#if user._doc.isAdmin}}
                 <li class="nav-item">
                     <a href="/staffs/manage" class="nav-link">Manage All Staff</a>
                 </li>
                 <li class="nav-item">
                     <a href="/staffs/register" class="nav-link">Add New Staff</a>
                 </li>
-                {{!-- {{/if}} --}}
+                {{/if}}
                 
                 <li class="nav-item dropdown">
                     <a  href="#" 
@@ -47,7 +48,7 @@
                         {{#if user._doc.avatar.data}}
                         <img src="data:image/{{user._doc.avatar.contentType}};base64,{{user._doc.avatar.data}}" width="50" height="50">
                         {{else}}
-                        <img src="/Default_User_Icon.png" alt="" width="50" height="50">
+                        <img src="/Default_User_Icon.png" alt="UserIcon" width="50" height="50">
                         {{/if}}
                         {{#if user._doc.staffName}}{{user._doc.staffName}}{{/if}}
                         </a>

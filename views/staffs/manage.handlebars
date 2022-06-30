@@ -9,7 +9,21 @@
     </p>
     <p><b>Staff Name : </b> {{staffName}}</p>
     <p><b>Login Name : </b> {{loginName}}</p>
+    <p><b>Role of Staff : </b> {{#if isAdmin}}Administrator{{else}}Regular Staff{{/if}}</p>
 
+    <!-- adding a form for changing role of the staff -->
+    {{#if isAdmin}}
+    <form action="/staffs/{{_id}}?_method=PUT" method="post">
+        <input type="hidden" name="role" value="regular" />
+        <input type="submit" class="btn btn-primary" value="change role to Regular Staff">
+    </form>
+    {{else}}
+    <form action="/staffs/{{_id}}?_method=PUT" method="post">
+        <input type="hidden" name="role" value="admin" />
+        <input type="submit" class="btn btn-primary" value="give role of Administrator">
+    </form>
+    {{/if}}
+    
     <!-- adding a form for delete button -->
     <form action="/staffs/{{_id}}?_method=DELETE" method="post">
         <input type="hidden" name="_method" value="DELETE" />

@@ -1,23 +1,11 @@
 import express from "express";
 
-import {getLogin, postLogin, getProfile, getEdit, updateProfile, 
-        getRegister, registerNewStaff, getLogout, showAllStaff, deleteStaff} 
+import {getLogin, postLogin, getProfile, getEdit, uploadAvater, updateProfile, deleteAvatar, 
+        getRegister, registerNewStaff, getLogout, showAllStaff, deleteStaff, changeRole} 
         from "./../controllers/staffsController.js";
 
 import ensureAuthenticated from "../helpers/auth.js";
 
-import multer from "multer"
-
-var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "./uploads")
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname)
-    }
-});
-  
-var upload = multer({ storage: storage });
 
 const router = express.Router();
 
@@ -33,11 +21,14 @@ router.route("/register").get(getRegister)
 router.get("/profile", ensureAuthenticated, getProfile);
 
 router.route("/edit").get(ensureAuthenticated, getEdit)
-                     .put(ensureAuthenticated, upload.single("avatar"), updateProfile);
+                     .put(ensureAuthenticated, uploadAvater, updateProfile);
+
+router.delete("/deleteAvatar", ensureAuthenticated, deleteAvatar);
 
 router.get("/manage", ensureAuthenticated, showAllStaff);
 
-router.delete("/:id", ensureAuthenticated, deleteStaff);
+router.route("/:id").delete(ensureAuthenticated, deleteStaff)
+                    .put(ensureAuthenticated, changeRole);
 
 router.get("/logout", getLogout);
 

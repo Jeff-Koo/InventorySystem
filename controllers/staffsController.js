@@ -3,6 +3,36 @@ import passport from "passport";
 import * as fs from "fs";
 import * as path from "path";
 import Staff from "./../models/Staffs.js";
+import multer from "multer";
+
+
+const storage = multer.diskStorage({
+    destination : (req, file, cb) => {
+        cb(null, "./uploads")
+    },
+    filename : (req, file, cb) => {
+        cb(null, file.fieldname)
+    },
+    fileFilter : (req, file, cb) => {
+        const extension = path.extname(file.originalname).toLowerCase();
+        const mimetype = file.mimetype;
+        if (
+            extension !== ".jpg" ||
+            extension !== ".jpeg" ||
+            extension !== ".png" ||
+            mimetype  !== "image/png" ||
+            mimetype  !== "image/jpg" ||
+            mimetype  !== "image/jpeg"
+        ) {
+            console.log("!!!!!!!!!!!!!!!!wrong type")
+            cb("error: wrong file type", true);
+        }
+    },
+});
+  
+const upload = multer({ storage: storage });
+
+export const uploadAvater = upload.single("avatar");
 
 export const getLogin = (req, res, next) => {
     res.render("staffs/login");
@@ -48,42 +78,47 @@ export const updateProfile = (req, res, next) => {
                 // correct password, then do update 
                 staff.staffName = req.body.staffName;
 
+                // two variables for storing the information of the avatar image 
                 var avatarData;
                 var avatarContentType;
 
+                // if there is a file for upload 
                 if (req.file) {
+                    // read the temporate file and take the data of the image
                     avatarData = fs.readFileSync(req.file.path).toString("base64");
                     avatarContentType = req.file.mimetype;
-
+                    
                     staff.avatar.data = avatarData;
                     staff.avatar.contentType = avatarContentType;
+
+                    // delete the temporate file 
+                    fs.unlink(req.file.path, (err) => {
+                        if (err) throw err;
+                    });
                 }
 
                 // check input : 2 input new passwords are not empty  
                 if ( req.body.newPassword1 && req.body.newPassword2) {
                     // check two input password are the same
                     if (req.body.newPassword1 == req.body.newPassword2) {
-                        console.log("new passwords are the same")
                         // hash the new password and save into MongoDB
                         bcrypt.genSalt(10, (err, salt) => {
                             bcrypt.hash(req.body.newPassword1, salt, (err, hash) => {
                                 if (err) throw err;
-                                console.log("hash value : ", hash);
                                 staff.password = hash;
-
                                 staff.save().then( ()=> {
-                                    res.render("staffs/profile", {
-                                        text: "Updated Successfully ! ",
-                                        avatar : staff.avatar,
-                                        staffName : staff.staffName,
-                                        loginName : staff.loginName,
-                                    });
+                                    // res.render("staffs/profile", {
+                                    //     text: "Updated Successfully ! ",
+                                    //     avatar : staff.avatar,
+                                    //     staffName : staff.staffName,
+                                    //     loginName : staff.loginName,
+                                    // });
+                                    res.redirect("/staffs/profile")
                                 });
                             });
                         });
                     } else {
                         // two input new password are not the same, so no update new password 
-                        console.log("wrong password, cannot update ");
                         res.render("staffs/edit", {
                             text : "New Password are not the same ! ",
                             staffName : req.body.staffName,
@@ -94,18 +129,18 @@ export const updateProfile = (req, res, next) => {
                     }
                 } else {
                     staff.save().then( ()=> {
-                        res.render("staffs/profile", {
-                            text: "Updated Successfully ! ",
-                            avatar : staff.avatar,
-                            staffName : staff.staffName,
-                            loginName : staff.loginName,
-                        });
+                        // res.render("staffs/profile", {
+                        //     text: "Updated Successfully ! ",
+                        //     avatar : staff.avatar,
+                        //     staffName : staff.staffName,
+                        //     loginName : staff.loginName,
+                        // });
+                        res.redirect("/staffs/profile")
                     });
                 }
 
             } else {
                 // wrong password 
-                console.log("wrong password, cannot update ");
                 res.render("staffs/edit", {
                     text : "wrong password, cannot update staff profile ! ",
                     staffName : req.body.staffName,
@@ -115,6 +150,16 @@ export const updateProfile = (req, res, next) => {
                 });
             }
         });
+    });
+};
+
+export const deleteAvatar = (req, res, next) => {
+    Staff.updateOne(
+        { _id : res.locals.user._id },
+        { $unset: { avatar : "" } }
+    ).then( ()=> {
+        console.log("delete avatar successfully!");
+        res.redirect("/staffs/profile")
     });
 };
 
@@ -195,7 +240,6 @@ export const showAllStaff = (req, res, next) =>{
     .lean()
     // .sort({ itemNumber: "asc" })           // show all items according to the item number in ascending order
     .then( (staffs) => {                      // staffs: array of document objects
-        console.log(staffs);
         res.render("staffs/manage", {
             staffs : staffs,
         });
@@ -208,5 +252,22 @@ export const deleteStaff = (req, res, next) => {
     .then( () => {
         console.log('deleted successfully');
         res.redirect("/staffs/manage");         // del item from Inventory Schema, and redirect to inventories page
+    });
+};
+
+
+export const changeRole = (req, res, next) => {
+    console.log("hey is changing role");
+    Staff.findOne({_id : req.params.id})
+    .then( (staff)=> {
+        if (req.body.role == "admin") {
+            staff.isAdmin = true;
+        } else {
+            staff.isAdmin = false;
+        }
+        staff.save().then( ()=> {
+            console.log("give admin role successfully!");
+            res.redirect("/staffs/manage");
+        });
     });
 };
