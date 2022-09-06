@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import passport from "passport";
 import * as fs from "fs";
-import * as path from "path";
 import Staff from "./../models/Staffs.js";
 import multer from "multer";
 
@@ -11,26 +10,30 @@ const storage = multer.diskStorage({
         cb(null, "./uploads")
     },
     filename : (req, file, cb) => {
-        cb(null, file.fieldname)
-    },
+        cb(null, file.originalname)
+    }
+});
+  
+const upload = multer({ 
+    storage: storage, 
     fileFilter : (req, file, cb) => {
-        const extension = path.extname(file.originalname).toLowerCase();
         const mimetype = file.mimetype;
         if (
-            extension !== ".jpg" ||
-            extension !== ".jpeg" ||
-            extension !== ".png" ||
-            mimetype  !== "image/png" ||
-            mimetype  !== "image/jpg" ||
-            mimetype  !== "image/jpeg"
+            mimetype !== "image/png" ||
+            mimetype !== "image/jpg" ||
+            mimetype !== "image/jpeg"||
+            mimetype !== "image/gif"
         ) {
-            console.log("!!!!!!!!!!!!!!!!wrong type")
-            cb("error: wrong file type", true);
+            // only accept jpeg, jpg, png, gif
+            cb(null, true);
+        } else {
+            // not allow other file types 
+            // flash an error message to user 
+            req.flash("error_msg", "Wrong file type for avatar! ");
+            cb(null, false);
         }
     },
 });
-  
-const upload = multer({ storage: storage });
 
 export const uploadAvater = upload.single("avatar");
 
