@@ -2,22 +2,13 @@
 
 use inventory-dev
 
+// insert sample login account:
+// login name: admin
+// password:   aaaa
 
-// insert sample data
-
-db.inventories.insertMany([
-
-
-]);
-
-
-
-db.transactions.insertMany([
-
-]);
-
-
-
-db.staffs.insertMany([
-
-]);
+db.staffs.insertOne({
+  "loginName": "admin",
+  "password": "$2a$10$sH6F3A5I/hztFrnBweNhGet1eBxIrfLLI1ozBluJ0r//W3.qMWHNe",
+  "staffName": "Test",
+  "isAdmin": true
+});
